@@ -1,11 +1,13 @@
 {
   "name": "find-instrument",
   "version": "1.0.0",
-  "description": "Service for categorazing music by instruments",
+  "description": "Service for categorizing music by instruments",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "serve": "nodemon index.js"
+    "serve": "nodemon index.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run serve\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -32,6 +34,8 @@
   "dependencies": {
     "config": "^3.3.3",
     "express": "^4.17.1",
-    "mongoose": "^5.11.13"
+    "jquery": "^3.5.1",
+    "mongoose": "^5.11.13",
+    "popper.js": "^1.16.1"
   }
 }
