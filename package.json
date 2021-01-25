@@ -1,0 +1,37 @@
+{
+  "name": "find-instrument",
+  "version": "1.0.0",
+  "description": "Service for categorazing music by instruments",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "serve": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DonAlexandro/find-instrument.git"
+  },
+  "keywords": [
+    "mern",
+    "nodejs",
+    "js",
+    "javascript",
+    "react",
+    "music"
+  ],
+  "author": "DonAlexandro <parashnokwtf@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DonAlexandro/find-instrument/issues"
+  },
+  "homepage": "https://github.com/DonAlexandro/find-instrument#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.7"
+  },
+  "dependencies": {
+    "config": "^3.3.3",
+    "express": "^4.17.1",
+    "mongoose": "^5.11.13"
+  }
+}
