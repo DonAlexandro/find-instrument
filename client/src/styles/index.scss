@@ -1,0 +1,39 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "utils/_variables.scss";
+
+a {
+    text-decoration: none;
+}
+
+.auth-intro {
+
+    background-image: url('https://cutt.ly/Nj8zZSu');
+    background-size: cover;
+    position: relative;
+    z-index: 1;
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background-color: rgba(0,0,0, .6);
+        z-index: -1;
+    }
+}
+
+.fs-7 {
+    font-size: 14px;
+    letter-spacing: 0.25px;
+}
+
+.invalid {
+    border: 1px solid $danger-color;
+
+    + label {
+        color: $danger-color;
+    }
+}
+
