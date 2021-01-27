@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Button = ({children, disabled, size = 'default', color = 'warning', spaces = [], actions, tooltip = ''}) => {
+export const Button = ({children, type = 'button', disabled = false, size = 'default', color = 'warning', spaces = [], actions, tooltip = ''}) => {
 	const sizes = {
 		default: '',
 		sm: 'btn-sm'
@@ -10,6 +10,7 @@ export const Button = ({children, disabled, size = 'default', color = 'warning',
 		warning: 'btn-warning',
 		outlineDark: 'btn-outline-dark',
 		outlineSecondary: 'btn-outline-secondary',
+		outlineLight: 'btn-outline-light'
 	}
 
 	const attrs = {
@@ -21,7 +22,8 @@ export const Button = ({children, disabled, size = 'default', color = 'warning',
 		].join(' '),
 		onClick: actions?.onClick,
 		'data-tip': tooltip,
-		disabled: disabled
+		type,
+		disabled
 	}
 
 	return (

@@ -33,6 +33,7 @@ export const Login = () => {
 					type="email"
 					name="email"
 					label="Введіть Email"
+					styles={['mb-3']}
 					innerRef={register({
 						required: 'Введіть, будь ласка, Email',
 						pattern: {
@@ -46,6 +47,7 @@ export const Login = () => {
 					type="password"
 					name="password"
 					label="Введіть пароль"
+					styles={['mb-3']}
 					innerRef={register({
 						required: 'Введіть, будь ласка, пароль',
 						minLength: {
@@ -56,7 +58,7 @@ export const Login = () => {
 					error={errors.password?.message}
 				/>
 				<div className="d-grid">
-					<Button disabled={loading}>Увійти</Button>
+					<Button type="submit" disabled={loading}>Увійти</Button>
 				</div>
 			</form>
 			<p className="text-center mb-0 mt-4 fs-7 text-muted">

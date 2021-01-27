@@ -32,6 +32,7 @@ export const Signup = () => {
 					type="email"
 					name="email"
 					label="Введіть Email"
+					styles={['mb-3']}
 					innerRef={register({
 						required: 'Введіть, будь ласка, Email',
 						pattern: {
@@ -45,6 +46,7 @@ export const Signup = () => {
 					type="text"
 					name="username"
 					label="Введіть псевдонім"
+					styles={['mb-3']}
 					innerRef={register({
 						required: 'Введіть, будь ласка, псевдонім',
 						minLength: {
@@ -58,6 +60,7 @@ export const Signup = () => {
 					type="password"
 					name="password"
 					label="Введіть пароль"
+					styles={['mb-3']}
 					innerRef={register({
 						required: 'Введіть, будь ласка, пароль',
 						minLength: {
@@ -71,13 +74,14 @@ export const Signup = () => {
 					type="password"
 					name="confirm"
 					label="Повторіть пароль"
+					styles={['mb-3']}
 					innerRef={register({
 						required: 'Повторіть, будь ласка, пароль'
 					})}
 					error={errors.confirm?.message}
 				/>
 				<div className="d-grid">
-					<Button disabled={loading}>Зареєструватися</Button>
+					<Button type="submit" disabled={loading}>Зареєструватися</Button>
 				</div>
 			</form>
 			<p className="text-center mb-0 mt-4 fs-7 text-muted">
