@@ -59,3 +59,22 @@ exports.loginValidator = [
 			}
 		})
 ]
+
+exports.noteValidator = [
+	body('title')
+		.custom((value, {req}) => {
+			if (!req.body.text.length && !value.length) {
+				return false
+			}
+
+			return true
+		}),
+	body('text')
+		.custom((value, {req}) => {
+			if (!req.body.title.length && !value.length) {
+				return false
+			}
+
+			return true
+		})
+]

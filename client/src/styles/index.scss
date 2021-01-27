@@ -1,12 +1,12 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "utils/_variables.scss";
+@import "utils/_mixins.scss";
 
 a {
     text-decoration: none;
 }
 
 .auth-intro {
-
     background-image: url('https://cutt.ly/Nj8zZSu');
     background-size: cover;
     position: relative;
@@ -37,3 +37,51 @@ a {
     }
 }
 
+.preloader-wrapper {
+    @include center-content;
+
+    width: 100%;
+    height: 80vh;
+
+    .spinner-border {
+        width: 10rem;
+        height: 10rem;
+    }
+}
+
+.note.bg-dark {
+    border: 1px solid $secondary-color;
+    background-color: rgba($dark-color, .4) !important;
+}
+
+.note.bg-success {
+    background-color: rgba($success-color, .4) !important;
+}
+
+.note.bg-warning {
+    background-color: rgba($warning-color, .4) !important;
+}
+
+.note.bg-primary {
+    background-color: rgba($primary-color, .4) !important;
+}
+
+.note.bg-danger {
+    background-color: rgba($danger-color, .4) !important;
+}
+
+.note.bg-info {
+    background-color: rgba($info-color, .4) !important;
+}
+
+.note.bg-secondary {
+    background-color: rgba($secondary-color, .4) !important;
+}
+
+.notes-empty {
+    font-size: 7rem;
+}
+
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 1) !important;
+}

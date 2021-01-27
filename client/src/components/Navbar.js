@@ -14,7 +14,7 @@ export const Navbar = ({isAuthenticated}) => {
 	}
 
 	return (
-		<nav className="navbar navbar-expand-lg navbar-dark bg-dark border-bottom">
+		<nav className="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
 			<div className="container">
 				<Link to="/" className="navbar-brand">
 					<strong><i className="bi bi-file-text d-inline-flex align-items-center"></i> Keep Copy</strong>
@@ -24,9 +24,6 @@ export const Navbar = ({isAuthenticated}) => {
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span className="navbar-toggler-icon"></span>
 				</button>
-				{/*<form className="flex-grow-1 px-5">*/}
-				{/*	<input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />*/}
-				{/*</form>*/}
 				<div className="collapse navbar-collapse w-auto" id="navbarNav">
 					<ul className="navbar-nav">
 						{!isAuthenticated ?
@@ -41,6 +38,9 @@ export const Navbar = ({isAuthenticated}) => {
 							<>
 								<li className="nav-item">
 									<NavLink to="/" exact className="nav-link">Нотатки</NavLink>
+								</li>
+								<li className="nav-item">
+									<a href="#" className="nav-link">Редагування ярликів</a>
 								</li>
 								<li className="nav-item">
 									<NavLink to="/archive" exact className="nav-link">Архів</NavLink>
