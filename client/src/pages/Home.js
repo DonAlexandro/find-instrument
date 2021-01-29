@@ -6,6 +6,7 @@ import {Loader} from '../components/Loader'
 import {NoteForm} from '../components/NoteForm';
 
 export const Home = () => {
+	const [, setState] = useState()
 	const [notes, setNotes] = useState([])
 
 	const {loading, request} = useHttp()
@@ -13,6 +14,20 @@ export const Home = () => {
 
 	const addNote = note => setNotes(prev => ([note, ...prev]))
 	const deleteNote = id => setNotes(notes.filter(note => note._id !== id))
+
+	const addNoteToPos = (pos, note) => {
+		notes.splice(pos, 0, note)
+		notes.splice(pos + 1, 1)
+
+		setNotes(notes)
+		setState({})
+	}
+	const updateNote = ({id, ...data}) => {
+		const idx = notes.findIndex(note => note._id === id)
+		const newNote = {...notes[idx], ...data}
+
+		addNoteToPos(idx, newNote)
+	}
 
 	const fetchNotes = useCallback(async () => {
 		try {
@@ -38,7 +53,12 @@ export const Home = () => {
 			{notes.length ?
 				<div className="row row-cols-4 g-3">
 					{notes.map(note =>
-						<Note note={note} key={note._id} deleteNote={deleteNote}/>
+						<Note
+							note={note}
+							key={note._id}
+							deleteNote={deleteNote}
+							updateNote={updateNote}
+						/>
 					)}
 				</div> :
 				<div className="text-white text-center notes-empty">

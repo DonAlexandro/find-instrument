@@ -78,3 +78,8 @@ exports.noteValidator = [
 			return true
 		})
 ]
+
+exports.tagValidator = [
+	body('title')
+		.not().isEmpty()
+]

@@ -47,35 +47,32 @@ router.get('/', auth, async (req, res) => {
 	}
 })
 
-router.post('/remove', auth, async (req, res) => {
+router.post('/update', auth, async (req, res) => {
 	try {
+		const {color, archived, removed} = req.body
+
 		const note = await Note.findOne({
 			_id: req.body.id,
 			author: req.user.userId
 		})
 
-		Object.assign(note, {removed: true})
+		const toChange = {
+			color: color ? color : note.color,
+			archived: archived ? archived : note.archived,
+			removed: removed ? removed : note.removed
+		}
+
+		Object.assign(note, toChange)
 
 		await note.save()
 
-		res.json({message: 'Нотатка переміщена в корзину'})
-	} catch (e) {
-		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
-	}
-})
-
-router.post('/archive', auth, async (req, res) => {
-	try {
-		const note = await Note.findOne({
-			_id: req.body.id,
-			author: req.user.userId
-		})
-
-		Object.assign(note, {archived: true})
-
-		await note.save()
-
-		res.json({message: 'Нотатка переміщена в архів'})
+		if (archived) {
+			res.json({message: 'Нотатка переміщена в архів'})
+		} else if (removed) {
+			res.json({message: 'Нотатка переміщена в корзину'})
+		} else {
+			res.json({message: ''})
+		}
 	} catch (e) {
 		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
 	}

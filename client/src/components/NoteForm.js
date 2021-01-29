@@ -93,7 +93,7 @@ export const NoteForm = ({addNote}) => {
 				<Button
 					color="outlineLight"
 					size="sm"
-					actions={{onClick: submitHandler}}
+					actions={{onClick: () => submitHandler()}}
 				>Закрити</Button>
 			</div>
 			}

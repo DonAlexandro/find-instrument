@@ -29,14 +29,6 @@ a {
     letter-spacing: 0.25px;
 }
 
-.invalid {
-    border: 1px solid $danger-color;
-
-    + label {
-        color: $danger-color;
-    }
-}
-
 .preloader-wrapper {
     @include center-content;
 
@@ -46,6 +38,14 @@ a {
     .spinner-border {
         width: 10rem;
         height: 10rem;
+    }
+}
+
+.note {
+    transition: all .3s ease;
+
+    .card-title {
+        font-size: 17px;
     }
 }
 
@@ -82,6 +82,28 @@ a {
     font-size: 7rem;
 }
 
+.tags-empty {
+    i {
+        font-size: 1.6rem;
+    }
+}
+
 .shadow-sm {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 1) !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .7) !important;
+}
+
+.dropdown-menu.show {
+    display: flex;
+    flex-wrap: wrap;
+
+    .btn {
+        height: 26px !important;
+        margin-left: 5px;
+        margin-bottom: 10px;
+    }
+}
+
+.btn-close {
+    background-image: none;
+    font-size: 1.7rem;
 }
