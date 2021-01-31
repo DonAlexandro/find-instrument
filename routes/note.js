@@ -39,6 +39,7 @@ router.get('/', auth, async (req, res) => {
 				archived: false
 			})
 			.sort({date: 'desc'})
+			.populate('tags.tagId')
 			.lean()
 
 		res.json({notes})
@@ -49,7 +50,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/update', auth, async (req, res) => {
 	try {
-		const {color, archived, removed} = req.body
+		const {color, archived, removed, tag} = req.body
 
 		const note = await Note.findOne({
 			_id: req.body.id,
@@ -59,7 +60,8 @@ router.post('/update', auth, async (req, res) => {
 		const toChange = {
 			color: color ? color : note.color,
 			archived: archived ? archived : note.archived,
-			removed: removed ? removed : note.removed
+			removed: removed ? removed : note.removed,
+			tags: tag ? [{tagId: tag}, ...note.tags] : note.tags
 		}
 
 		Object.assign(note, toChange)
@@ -74,6 +76,7 @@ router.post('/update', auth, async (req, res) => {
 			res.json({message: ''})
 		}
 	} catch (e) {
+		console.error(e)
 		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
 	}
 })

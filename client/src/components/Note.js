@@ -5,8 +5,9 @@ import {Button} from './Button'
 import {useHttp} from '../hooks/http'
 import {AuthContext} from '../context/authContext'
 import {ColorPicker} from './ColorPicker';
+import {TagPicker} from './TagPicker';
 
-export const Note = ({note, deleteNote, updateNote}) => {
+export const Note = ({note, deleteNote, updateNote, tags}) => {
 	const {request, error, clearError} = useHttp()
 	const {token} = useContext(AuthContext)
 
@@ -36,12 +37,33 @@ export const Note = ({note, deleteNote, updateNote}) => {
 		} catch (e) {}
 	}
 
+	const addTag = async (id, tag) => {
+		try {
+			await request('/api/notes/update', 'POST', {id, tag: tag._id}, {
+				Authorization: `Bearer ${token}`
+			})
+
+			updateNote({id, tags: [{tagId: tag}, ...note.tags]})
+		} catch (e) {}
+	}
+
 	return (
 		<div className="col">
 			<div className={`note card h-100 ${note.color} text-white`}>
 				<div className="card-body">
-					{note.title && <h6 className="card-title">{note.title}</h6>}
-					{note.text && <p className={`card-text ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
+					<div className="d-flex flex-column align-items-start h-100">
+						<div className="flex-grow-1">
+							{note.title && <h6 className="card-title">{note.title}</h6>}
+							{note.text && <p className={`card-text mb-3 ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
+						</div>
+						<div>
+							{note.tags &&
+								note.tags.map(tag =>
+									<span key={tag.tagId._id} className="badge rounded-pill bg-transparent border me-2 mt-2">{tag.tagId.title}</span>
+								)
+							}
+						</div>
+					</div>
 				</div>
 				<div className="card-footer d-flex justify-content-between">
 					<div className="dropdown">
@@ -65,14 +87,18 @@ export const Note = ({note, deleteNote, updateNote}) => {
 						<i className="bi bi-archive-fill d-flex align-items-center"></i>
 					</Button>
 					<ReactTooltip effect="solid"/>
-					<Button
-						size="sm"
-						color="outlineLight"
-						tooltip="Додати ярлик"
-					>
-						<i className="bi bi-tag-fill d-flex align-items-center"></i>
-					</Button>
-					<ReactTooltip effect="solid"/>
+					<div className="dropdown">
+						<button
+							className="btn btn-outline-light btn-sm"
+							data-bs-toggle="dropdown"
+							aria-expanded="false"
+							data-tip="Додати ярлик"
+						>
+							<i className="bi bi-tag-fill d-flex align-items-center"></i>
+						</button>
+						<ReactTooltip effect="solid"/>
+						<TagPicker tags={tags} addTag={addTag} note={note}/>
+					</div>
 					<Button
 						size="sm"
 						color="outlineLight"

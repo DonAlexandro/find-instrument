@@ -6,7 +6,7 @@ import {DefaultInput, InputGroup} from '../Input'
 import {useHttp} from '../../hooks/http'
 import {AuthContext} from '../../context/authContext'
 import {Button} from '../Button'
-import {TagItem} from '../TagItem';
+import {TagItem} from '../TagItem'
 
 export const TagsModal = () => {
 	const [, setState] = useState()
@@ -14,7 +14,7 @@ export const TagsModal = () => {
 
 	const {token} = useContext(AuthContext)
 	const {register, handleSubmit, reset} = useForm()
-	const {request, error, clearError, loading} = useHttp()
+	const {request, clearError, error, loading} = useHttp()
 
 	useEffect(() => {
 		toast.error(error)

@@ -55,7 +55,7 @@ export const InputGroup = ({size = '', children}) => {
 	)
 }
 
-export const DefaultInput = ({type, innerRef, label, name, id, disabled, value}) => {
+export const DefaultInput = ({type, innerRef, label, name, id, disabled, value, actions}) => {
 	return (
 		<input
 		   	className="form-control"
@@ -66,6 +66,7 @@ export const DefaultInput = ({type, innerRef, label, name, id, disabled, value})
 			ref={innerRef}
 			disabled={disabled}
 			value={value}
+			onChange={actions?.onChange}
 		/>
 	)
 }

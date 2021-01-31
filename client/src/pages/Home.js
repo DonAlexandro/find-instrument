@@ -8,6 +8,7 @@ import {NoteForm} from '../components/NoteForm';
 export const Home = () => {
 	const [, setState] = useState()
 	const [notes, setNotes] = useState([])
+	const [tags, setTags] = useState([])
 
 	const {loading, request} = useHttp()
 	const {token} = useContext(AuthContext)
@@ -43,18 +44,33 @@ export const Home = () => {
 		fetchNotes()
 	}, [fetchNotes])
 
+	const fetchTags = useCallback(async () => {
+		try {
+			const response = await request('/api/tags', 'GET', null, {
+				Authorization: `Bearer ${token}`
+			})
+
+			setTags(response.tags)
+		} catch (e) {}
+	}, [request, token])
+
+	useEffect(() => {
+		fetchTags()
+	}, [fetchTags])
+
 	if (loading) {
 		return <Loader />
 	}
 
 	return (
-		<div className="w-75 mx-auto">
+		<div className="w-80 mx-auto">
 			<NoteForm addNote={addNote}/>
 			{notes.length ?
 				<div className="row row-cols-4 g-3">
 					{notes.map(note =>
 						<Note
 							note={note}
+							tags={tags}
 							key={note._id}
 							deleteNote={deleteNote}
 							updateNote={updateNote}
