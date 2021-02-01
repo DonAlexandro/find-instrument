@@ -13,18 +13,19 @@ router.post('/', auth, noteValidator, async (req, res) => {
 	}
 
 	try {
-		const {title, text, archived} = req.body
+		const {title, text, archived, note} = req.body
 
-		const note = new Note({
+		const newNote = new Note({
 			title, text,
 			archived,
-			author: req.user.userId
+			author: req.user.userId,
+			tags: note?.tags ? note.tags : [],
+			color: note?.color && note.color
 		})
 
-		await note.save()
+		await newNote.save()
 
-
-		res.status(201).json({message: archived && 'Нотатка додана в архів', note})
+		res.status(201).json({message: archived && 'Нотатка додана в архів', note: newNote})
 	} catch (e) {
 		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
 	}
@@ -32,13 +33,17 @@ router.post('/', auth, noteValidator, async (req, res) => {
 
 router.get('/', auth, async (req, res) => {
 	try {
+		const {location} = req.query
+
 		const notes = await Note
 			.find({
 				author: req.user.userId,
 				removed: false,
-				archived: false
-			})
+				archived: location === 'archive' ? true : false,
+				removed: location === 'trash' ? true : false
+ 			})
 			.sort({date: 'desc'})
+			.populate('tags.tagId')
 			.lean()
 
 		res.json({notes})
@@ -49,7 +54,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/update', auth, async (req, res) => {
 	try {
-		const {color, archived, removed} = req.body
+		const {color, archived, removed, tags} = req.body
 
 		const note = await Note.findOne({
 			_id: req.body.id,
@@ -58,8 +63,9 @@ router.post('/update', auth, async (req, res) => {
 
 		const toChange = {
 			color: color ? color : note.color,
-			archived: archived ? archived : note.archived,
-			removed: removed ? removed : note.removed
+			archived: archived !== undefined ? archived : note.archived,
+			removed: removed !== undefined ? removed : note.removed,
+			tags: tags ? tags : note.tags
 		}
 
 		Object.assign(note, toChange)
@@ -73,6 +79,19 @@ router.post('/update', auth, async (req, res) => {
 		} else {
 			res.json({message: ''})
 		}
+	} catch (e) {
+		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
+	}
+})
+
+router.post('/remove', auth, async (req, res) => {
+	try {
+		await Note.deleteOne({
+			_id: req.body.id,
+			author: req.user.userId
+		})
+
+		res.json({message: 'Замітку втрачено назавжди...'})
 	} catch (e) {
 		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
 	}

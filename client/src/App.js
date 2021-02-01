@@ -25,7 +25,7 @@ export default function App() {
 			<Router>
 				<ToastContainer />
 				<Navbar isAuthenticated={isAuthenticated}/>
-				<div className="container mt-4">
+				<div className="container mt-4 pb-4">
 					{routes}
 				</div>
 			</Router>

@@ -1,10 +1,15 @@
-import React, {useContext} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
 import {Link, NavLink, useHistory} from 'react-router-dom'
+import {toast} from 'react-toastify'
 import {AuthContext} from '../context/authContext'
 import {TagsModal} from './modals/TagsModal'
+import {useHttp} from '../hooks/http'
 
 export const Navbar = ({isAuthenticated}) => {
-	const {logout} = useContext(AuthContext)
+	const [tags, setTags] = useState([])
+
+	const {logout, token} = useContext(AuthContext)
+	const {request, clearError, error} = useHttp()
 	const history = useHistory()
 
 	const logoutHandler = event => {
@@ -14,9 +19,28 @@ export const Navbar = ({isAuthenticated}) => {
 		history.push('/login')
 	}
 
+	const fetchTags = useCallback(async () => {
+		try {
+			const response = await request('/api/tags', 'GET', null, {
+				Authorization: `Bearer ${token}`
+			})
+
+			setTags(response.tags)
+		} catch (e) {}
+	}, [request, token])
+
+	useEffect(() => {
+		fetchTags()
+	}, [fetchTags])
+
+	useEffect(() => {
+		toast.error(error)
+		clearError()
+	}, [error, clearError])
+
 	return (
 		<>
-			{isAuthenticated && <TagsModal />}
+			{isAuthenticated && <TagsModal tags={tags}/>}
 			<nav className="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary">
 				<div className="container">
 					<Link to="/" className="navbar-brand">
@@ -41,6 +65,23 @@ export const Navbar = ({isAuthenticated}) => {
 								<>
 									<li className="nav-item">
 										<NavLink to="/" exact className="nav-link">Нотатки</NavLink>
+									</li>
+									<li className="nav-item dropdown">
+										<button className="btn shadow-none nav-link dropdown-toggle"
+										   data-bs-toggle="dropdown"
+										   aria-expanded="false"
+										   onClick={e => e.preventDefault()}
+										>
+											Ярлики
+										</button>
+										<ul className="dropdown-menu dropdown-menu-dark">
+											{tags.map(tag =>
+												<li key={tag._id}><Link
+													to={`/tag/${tag._id}`}
+													className="dropdown-item"
+												>{tag.title}</Link></li>
+											)}
+										</ul>
 									</li>
 									<li className="nav-item">
 										<a

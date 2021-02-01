@@ -42,10 +42,27 @@ a {
 }
 
 .note {
-    transition: all .3s ease;
+    transition: $transition;
 
     .card-title {
         font-size: 17px;
+    }
+
+    .card-footer {
+        border-top: 0;
+
+        > .btn, .dropdown {
+            transition: opacity .3s ease;
+            opacity: 0;
+        }
+    }
+
+    &:hover {
+        .card-footer {
+            > .btn, .dropdown {
+                opacity: 1;
+            }
+        }
     }
 }
 
@@ -78,6 +95,18 @@ a {
     background-color: rgba($secondary-color, .4) !important;
 }
 
+.note.bg-purple {
+    background-color: rgba($purple, .4) !important;
+}
+
+.note.bg-pink {
+    background-color: rgba($pink, .4) !important;
+}
+
+.note.bg-brown {
+    background-color: rgba($brown, .4) !important;
+}
+
 .notes-empty {
     font-size: 7rem;
 }
@@ -92,7 +121,7 @@ a {
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .7) !important;
 }
 
-.dropdown-menu.show {
+.color-picker.show {
     display: flex;
     flex-wrap: wrap;
 
@@ -106,4 +135,61 @@ a {
 .btn-close {
     background-image: none;
     font-size: 1.7rem;
+}
+
+.w-80 {
+    width: 80%;
+}
+
+.tag-picker.show {
+    width: 15rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-check:checked {
+    + .btn-outline-purple {
+        color: #fff;
+        background-color: $purple;
+    }
+
+    + .btn-outline-pink {
+        color: #fff;
+        background-color: $pink;
+    }
+
+    + .btn-outline-brown {
+        color: #fff;
+        background-color: $brown;
+    }
+}
+
+.btn-outline-purple {
+    border: 1px solid $purple;
+    color: $purple;
+
+    &:hover, &:focus {
+        color: #fff;
+        background-color: $purple;
+    }
+}
+
+.btn-outline-pink {
+    border: 1px solid $pink;
+    color: $pink;
+
+    &:hover, &:focus {
+        color: #fff;
+        background-color: $pink;
+    }
+}
+
+.btn-outline-brown {
+    border: 1px solid $brown;
+    color: $brown;
+
+    &:hover, &:focus {
+        color: #fff;
+        background-color: $brown;
+    }
 }

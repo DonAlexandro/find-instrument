@@ -1,13 +1,12 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react'
 import {toast} from 'react-toastify'
-import {useHttp} from '../hooks/http'
 import {AuthContext} from '../context/authContext'
-import {Note} from '../components/Note'
+import {useHttp} from '../hooks/http'
 import {Loader} from '../components/Loader'
-import {NoteForm} from '../components/NoteForm'
+import {Note} from '../components/Note'
 import {addObjectToPosition, removeObjectFromArr, updateObject} from '../utils/functions'
 
-export const Home = () => {
+export const Archive = () => {
 	const [, setState] = useState()
 	const [notes, setNotes] = useState([])
 	const [tags, setTags] = useState([])
@@ -15,7 +14,6 @@ export const Home = () => {
 	const {loading, request, error, clearError} = useHttp()
 	const {token} = useContext(AuthContext)
 
-	const addNote = note => setNotes(prev => ([note, ...prev]))
 	const deleteNote = id => setNotes(removeObjectFromArr(notes, id))
 	const addNoteToPos = (pos, note) => {
 		setNotes(addObjectToPosition(notes, note, pos))
@@ -28,7 +26,7 @@ export const Home = () => {
 
 	const fetchNotes = useCallback(async () => {
 		try {
-			const response = await request('/api/notes', 'GET', null, {
+			const response = await request('/api/notes?location=archive', 'GET', null, {
 				Authorization: `Bearer ${token}`
 			})
 
@@ -65,22 +63,27 @@ export const Home = () => {
 
 	return (
 		<div className="w-80 mx-auto">
-			<NoteForm addNote={addNote} tags={tags}/>
 			{notes.length ?
-				<div className="row row-cols-4 g-3">
-					{notes.map(note =>
-						<Note
-							note={note}
-							tags={tags}
-							key={note._id}
-							deleteNote={deleteNote}
-							updateNote={updateNote}
-						/>
-					)}
-				</div> :
+				<>
+					<h1 className="text-white mb-5 display-5 d-flex">
+						<i className="bi bi-archive me-2 d-flex align-items-center"></i>
+						Архів
+					</h1>
+					<div className="row row-cols-4 g-3">
+						{notes.map(note =>
+							<Note
+								note={note}
+								tags={tags}
+								key={note._id}
+								deleteNote={deleteNote}
+								updateNote={updateNote}
+							/>
+						)}
+					</div>
+				</> :
 				<div className="text-white text-center notes-empty">
-					<i className="bi bi-file-text text-muted"></i>
-					<h1 className="display-6 text-muted mt-3">Нотаток поки що немає</h1>
+					<i className="bi bi-archive text-muted"></i>
+					<h1 className="display-6 text-muted mt-3">Архів поки що пустий</h1>
 				</div>
 			}
 		</div>

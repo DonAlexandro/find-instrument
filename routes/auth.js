@@ -44,7 +44,7 @@ router.post('/login', loginValidator, async (req, res) => {
 
 		const token = jwt.sign({userId}, config.get('jwtSecret'), {expiresIn: '1h'})
 
-		res.json({message: 'Вітаємо!', token, userId})
+		res.json({token, userId})
 	} catch (e) {
 		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
 	}
