@@ -4,8 +4,9 @@ import {toast} from 'react-toastify'
 import {Button} from './Button'
 import {useHttp} from '../hooks/http'
 import {AuthContext} from '../context/authContext'
-import {ColorPicker} from './ColorPicker';
-import {TagPicker} from './TagPicker';
+import {ColorPicker} from './ColorPicker'
+import {TagPicker} from './TagPicker'
+import {isObjectInArray} from '../utils/functions'
 
 export const Note = ({note, deleteNote, updateNote, tags}) => {
 	const {request, error, clearError} = useHttp()
@@ -37,13 +38,32 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 		} catch (e) {}
 	}
 
-	const addTag = async (id, tag) => {
+	const removeNote = async (id) => {
 		try {
-			await request('/api/notes/update', 'POST', {id, tag: tag._id}, {
+			const response = await request('/api/notes/remove', 'POST', {id}, {
 				Authorization: `Bearer ${token}`
 			})
 
-			updateNote({id, tags: [{tagId: tag}, ...note.tags]})
+			deleteNote(id)
+			toast.dark(response.message)
+		} catch (e) {}
+	}
+
+	const toggleTag = async (id, tag) => {
+		try {
+			let tags
+
+			if (isObjectInArray(note.tags, tag)) {
+				tags = note.tags.filter(item => item.tagId._id !== tag._id)
+			} else {
+				tags = [{tagId: tag}, ...note.tags]
+			}
+
+			updateNote({id, tags})
+
+			await request('/api/notes/update', 'POST', {id, tags}, {
+				Authorization: `Bearer ${token}`
+			})
 		} catch (e) {}
 	}
 
@@ -54,58 +74,80 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 					<div className="d-flex flex-column align-items-start h-100">
 						<div className="flex-grow-1">
 							{note.title && <h6 className="card-title">{note.title}</h6>}
-							{note.text && <p className={`card-text mb-3 ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
+							{note.text && <p className={`card-text ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
 						</div>
-						<div>
-							{note.tags &&
-								note.tags.map(tag =>
-									<span key={tag.tagId._id} className="badge rounded-pill bg-transparent border me-2 mt-2">{tag.tagId.title}</span>
-								)
-							}
-						</div>
+						{note.tags.length !== 0 &&
+							<div className="mt-2">
+								{note.tags.map(tag =>
+									<span
+										key={tag.tagId?._id}
+										className="badge rounded-pill bg-transparent border me-2 mt-2"
+									>{tag.tagId?.title}</span>
+								)}
+							</div>
+						}
 					</div>
 				</div>
-				<div className="card-footer d-flex justify-content-between">
-					<div className="dropdown">
-						<button
-							className="btn btn-outline-light btn-sm"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							data-tip="Змінити колір"
+				<div className={`card-footer d-flex ${!note.removed && 'justify-content-between'}`}>
+					{!note.removed ?
+					<>
+						<div className="dropdown">
+							<button
+								className="btn btn-outline-light btn-sm"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								data-tip="Змінити колір"
+							>
+								<i className="bi bi-palette-fill d-flex align-items-center"></i>
+							</button>
+							<ReactTooltip effect="solid"/>
+							<ColorPicker note={note} updateColor={updateColor}/>
+						</div>
+						<Button
+							size="sm"
+							color="outlineLight"
+							tooltip={`${note.archived ? 'Вернути з архіву' : 'Архівувати'}`}
+							actions={{onClick: () => moveNote(note._id, false, !note.archived)}}
 						>
-							<i className="bi bi-palette-fill d-flex align-items-center"></i>
-						</button>
+							<i className="bi bi-archive-fill d-flex align-items-center"></i>
+						</Button>
 						<ReactTooltip effect="solid"/>
-						<ColorPicker note={note} updateColor={updateColor}/>
-					</div>
+						<div className="dropdown">
+							<button
+								className="btn btn-outline-light btn-sm"
+								data-bs-toggle="dropdown"
+								aria-expanded="false"
+								data-tip="Додати ярлик"
+							>
+								<i className="bi bi-tag-fill d-flex align-items-center"></i>
+							</button>
+							<ReactTooltip effect="solid"/>
+							<TagPicker tags={tags} toggleTag={toggleTag} note={note}/>
+						</div>
+					</> :
+					<>
+						<Button
+							size="sm"
+							color="outlineLight"
+							tooltip="Видалити назавжди"
+							spaces={['me-2']}
+							actions={{onClick: () => removeNote(note._id)}}
+						>
+							<i className="bi bi-trash-fill d-flex align-items-center"></i>
+						</Button>
+						<ReactTooltip effect="solid"/>
+					</>
+					}
 					<Button
 						size="sm"
 						color="outlineLight"
-						tooltip="Архівувати"
-						actions={{onClick: () => moveNote(note._id, false, true)}}
+						tooltip={note.removed ? 'Відновити' : 'Видалити'}
+						actions={{onClick: () => moveNote(note._id, !note.removed)}}
 					>
-						<i className="bi bi-archive-fill d-flex align-items-center"></i>
-					</Button>
-					<ReactTooltip effect="solid"/>
-					<div className="dropdown">
-						<button
-							className="btn btn-outline-light btn-sm"
-							data-bs-toggle="dropdown"
-							aria-expanded="false"
-							data-tip="Додати ярлик"
-						>
-							<i className="bi bi-tag-fill d-flex align-items-center"></i>
-						</button>
-						<ReactTooltip effect="solid"/>
-						<TagPicker tags={tags} addTag={addTag} note={note}/>
-					</div>
-					<Button
-						size="sm"
-						color="outlineLight"
-						tooltip="Видалити"
-						actions={{onClick: () => moveNote(note._id, true)}}
-					>
-						<i className="bi bi-trash-fill d-flex align-items-center"></i>
+						{note.removed ?
+							<i className="bi bi-arrow-clockwise"></i> :
+							<i className="bi bi-trash-fill d-flex align-items-center"></i>
+						}
 					</Button>
 					<ReactTooltip effect="solid"/>
 				</div>

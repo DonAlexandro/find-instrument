@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {useForm} from 'react-hook-form'
 import {toast} from 'react-toastify'
 import {Modal, ModalBody, ModalHeader} from '../Modal'
@@ -8,13 +8,17 @@ import {AuthContext} from '../../context/authContext'
 import {Button} from '../Button'
 import {TagItem} from '../TagItem'
 
-export const TagsModal = () => {
+export const TagsModal = ({tags}) => {
 	const [, setState] = useState()
-	const [tags, setTags] = useState([])
+	const [localTags, setTags] = useState(tags)
 
 	const {token} = useContext(AuthContext)
 	const {register, handleSubmit, reset} = useForm()
 	const {request, clearError, error, loading} = useHttp()
+
+	useEffect(() => {
+		setTags(tags)
+	}, [tags, setTags])
 
 	useEffect(() => {
 		toast.error(error)
@@ -58,20 +62,6 @@ export const TagsModal = () => {
 		} catch (e) {}
 	}
 
-	const fetchTags = useCallback(async () => {
-		try {
-			const response = await request('/api/tags', 'GET', null, {
-				Authorization: `Bearer ${token}`
-			})
-
-			setTags(response.tags)
-		} catch (e) {}
-	}, [request, token])
-
-	useEffect(() => {
-		fetchTags()
-	}, [fetchTags])
-
 	return (
 		<Modal id="tagsModal" size="sm">
 			<ModalHeader>Редагування ярликів</ModalHeader>
@@ -92,7 +82,7 @@ export const TagsModal = () => {
 				</form>
 				{tags.length ?
 					<ul className="list-group list-group-flush mt-2">
-						{tags.map((tag, idx) =>
+						{localTags.map((tag, idx) =>
 							<TagItem
 								key={idx}
 								tag={tag}

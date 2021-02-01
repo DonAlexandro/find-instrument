@@ -22,7 +22,6 @@ export const Login = () => {
 		try {
 			const response = await request('/api/auth/login', 'POST', {...data})
 			login(response.token, response.userId)
-			toast.dark(response.message)
 		} catch (e) {}
 	}
 

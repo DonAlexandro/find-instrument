@@ -8,7 +8,10 @@ export const ColorPicker = ({note, updateColor}) => {
 		'danger',
 		'warning',
 		'info',
-		'dark'
+		'dark',
+		'purple',
+		'pink',
+		'brown'
 	]
 
 	return (
@@ -18,7 +21,7 @@ export const ColorPicker = ({note, updateColor}) => {
 					<input
 						type="checkbox"
 						className="btn-check"
-						checked={`bg-${color}` === note.color}
+						checked={`bg-${color}` === note?.color}
 						id={`${color}-${note._id}`}
 						autoComplete="off"
 						readOnly

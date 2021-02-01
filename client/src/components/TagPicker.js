@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {DefaultInput, InputGroup} from './Input'
 
-export const TagPicker = ({tags, addTag, note}) => {
+export const TagPicker = ({tags, toggleTag, note}) => {
 	const [localTags, setLocalTags] = useState([])
 
 	useEffect(() => {
@@ -21,9 +21,9 @@ export const TagPicker = ({tags, addTag, note}) => {
 	}
 
 	return (
-		<ul className="dropdown-menu dropdown-menu-dark">
+		<ul className="dropdown-menu dropdown-menu-dark tag-picker">
 			<li><h6 className="dropdown-header">Додати ярлик</h6></li>
-			<li className="mb-2 px-3">
+			<li className="pb-2 px-3">
 				<InputGroup size="sm">
 					<DefaultInput
 						type="text"
@@ -34,18 +34,20 @@ export const TagPicker = ({tags, addTag, note}) => {
 				</InputGroup>
 			</li>
 			{localTags.map(tag =>
-				<li className="ps-3" key={tag._id}>
-					<div className="form-check" onClick={() => addTag(note._id, tag)}>
-						<input
-							className="form-check-input"
-							type="checkbox"
-							id={`tag-${tag._id}`}
-							checked={isObjInArr(tag.title)}
-							onChange={() => {}}
-						/>
-						<label className="form-check-label" htmlFor={`tag-${tag._id}`}>
-							{tag.title}
-						</label>
+				<li key={tag._id}>
+					<div className="dropdown-item">
+						<div className="form-check" onClick={() => toggleTag(note._id, tag)}>
+							<input
+								className="form-check-input"
+								type="checkbox"
+								id={`tag-${tag._id}`}
+								checked={isObjInArr(tag.title)}
+								onChange={() => {}}
+							/>
+							<label className="form-check-label" htmlFor={`tag-${tag._id}`}>
+								{tag.title}
+							</label>
+						</div>
 					</div>
 				</li>
 			)}
