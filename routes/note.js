@@ -54,7 +54,7 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/update', auth, async (req, res) => {
 	try {
-		const {color, archived, removed, tags} = req.body
+		const {color, archived, removed, tags, pinned} = req.body
 
 		const note = await Note.findOne({
 			_id: req.body.id,
@@ -65,7 +65,8 @@ router.post('/update', auth, async (req, res) => {
 			color: color ? color : note.color,
 			archived: archived !== undefined ? archived : note.archived,
 			removed: removed !== undefined ? removed : note.removed,
-			tags: tags ? tags : note.tags
+			tags: tags ? tags : note.tags,
+			pinned: pinned !== undefined ? pinned : note.pinned
 		}
 
 		Object.assign(note, toChange)

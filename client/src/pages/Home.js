@@ -63,25 +63,51 @@ export const Home = () => {
 		return <Loader />
 	}
 
+	const pinnedNotes = notes.filter(note => note.pinned)
+	const otherNotes = notes.filter(note => !note.pinned)
+
 	return (
 		<div className="w-80 mx-auto">
 			<NoteForm addNote={addNote} tags={tags}/>
 			{notes.length ?
-				<div className="row row-cols-4 g-3">
-					{notes.map(note =>
-						<Note
-							note={note}
-							tags={tags}
-							key={note._id}
-							deleteNote={deleteNote}
-							updateNote={updateNote}
-						/>
-					)}
-				</div> :
-				<div className="text-white text-center notes-empty">
-					<i className="bi bi-file-text text-muted"></i>
-					<h1 className="display-6 text-muted mt-3">Нотаток поки що немає</h1>
-				</div>
+			<>
+				{pinnedNotes.length &&
+				<>
+					<h6 className="lead fs-7 text-muted text-uppercase fw-normal ms-3">Закріплені</h6>
+					<div className="row row-cols-4 g-3 mb-5">
+						{pinnedNotes.map(note =>
+							<Note
+								note={note}
+								tags={tags}
+								key={note._id}
+								deleteNote={deleteNote}
+								updateNote={updateNote}
+							/>
+						)}
+					</div>
+				</>
+				}
+				{otherNotes.length &&
+				<>
+					{pinnedNotes.length && <h6 className="lead fs-7 text-muted text-uppercase fw-normal ms-3">Інші нотатки</h6>}
+					<div className="row row-cols-4 g-3">
+						{otherNotes.map(note =>
+							<Note
+								note={note}
+								tags={tags}
+								key={note._id}
+								deleteNote={deleteNote}
+								updateNote={updateNote}
+							/>
+						)}
+					</div>
+				</>
+				}
+			</> :
+			<div className="text-white text-center notes-empty">
+				<i className="bi bi-file-text text-muted"></i>
+				<h1 className="display-6 text-muted mt-3">Нотаток поки що немає</h1>
+			</div>
 			}
 		</div>
 	)

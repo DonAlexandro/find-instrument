@@ -67,13 +67,39 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 		} catch (e) {}
 	}
 
+	const pinNote = async (id, pinned = false) => {
+		try {
+			await request('/api/notes/update', 'POST', {id, pinned}, {
+				Authorization: `Bearer ${token}`
+			})
+
+			updateNote({id, pinned})
+		} catch (e) {}
+	}
+
 	return (
 		<div className="col">
 			<div className={`note card h-100 ${note.color} text-white`}>
-				<div className="card-body">
+				<div className="card-header border-bottom-0 d-flex align-items-start justify-content-between">
+					{note.title && <h6 className="card-title mb-0 align-self-center">{note.title}</h6>}
+					{!note.removed && !note.archived &&
+						<>
+							<Button
+								color={`${note.pinned ? 'light' : 'outlineLight'}`}
+								size="sm"
+								spaces={['ms-2']}
+								tooltip={`${note.pinned ? 'Відкріпити нотатку' : 'Закріпити нотатку'}`}
+								actions={{onClick: () => pinNote(note._id, !note.pinned)}}
+							>
+								<i className="bi bi-pin-fill"></i>
+							</Button>
+							<ReactTooltip effect="solid"/>
+						</>
+					}
+				</div>
+				<div className="card-body pt-2">
 					<div className="d-flex flex-column align-items-start h-100">
 						<div className="flex-grow-1">
-							{note.title && <h6 className="card-title">{note.title}</h6>}
 							{note.text && <p className={`card-text ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
 						</div>
 						{note.tags.length !== 0 &&
@@ -98,7 +124,7 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 								aria-expanded="false"
 								data-tip="Змінити колір"
 							>
-								<i className="bi bi-palette-fill d-flex align-items-center"></i>
+								<i className="bi bi-palette-fill d-flex"></i>
 							</button>
 							<ReactTooltip effect="solid"/>
 							<ColorPicker note={note} updateColor={updateColor}/>
