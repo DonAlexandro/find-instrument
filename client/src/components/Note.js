@@ -24,7 +24,7 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 			})
 
 			deleteNote(id)
-			toast.dark(response.message)
+			response.message.length && toast.dark(response.message)
 		} catch (e) {}
 	}
 

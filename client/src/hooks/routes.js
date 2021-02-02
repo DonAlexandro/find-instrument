@@ -5,6 +5,7 @@ import {Login} from '../pages/Login'
 import {Signup} from '../pages/Signup'
 import {Archive} from '../pages/Archive'
 import {Trash} from '../pages/Trash'
+import {Tag} from '../pages/Tag'
 
 export const useRoutes = (isAuthenticated) => {
 	if (isAuthenticated) {
@@ -18,6 +19,9 @@ export const useRoutes = (isAuthenticated) => {
 				</Route>
 				<Route path="/trash" exact>
 					<Trash />
+				</Route>
+				<Route path="/tag/:id" exact>
+					<Tag />
 				</Route>
 				<Redirect to="/"/>
 			</Switch>
