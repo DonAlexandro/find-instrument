@@ -48,6 +48,13 @@ a {
         font-size: 17px;
     }
 
+    .card-header {
+        > .btn {
+            transition: opacity .3s ease;
+            opacity: 0;
+        }
+    }
+
     .card-footer {
         border-top: 0;
 
@@ -60,6 +67,12 @@ a {
     &:hover {
         .card-footer {
             > .btn, .dropdown {
+                opacity: 1;
+            }
+        }
+
+        .card-header {
+            > .btn {
                 opacity: 1;
             }
         }

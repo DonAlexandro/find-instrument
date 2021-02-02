@@ -65,10 +65,7 @@ export const Archive = () => {
 		<div className="w-80 mx-auto">
 			{notes.length ?
 				<>
-					<h1 className="text-white mb-5 display-5 d-flex">
-						<i className="bi bi-archive me-2 d-flex align-items-center"></i>
-						Архів
-					</h1>
+					<h1 className="text-white mb-5 display-5 d-flex">Архів</h1>
 					<div className="row row-cols-4 g-3">
 						{notes.map(note =>
 							<Note

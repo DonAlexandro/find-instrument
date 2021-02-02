@@ -41,10 +41,7 @@ export const Trash = () => {
 		<div className="w-80 mx-auto">
 			{notes.length ?
 				<>
-					<h1 className="text-white mb-5 display-5 d-flex">
-						<i className="bi bi-trash me-2 d-flex align-items-center"></i>
-						Корзина
-					</h1>
+					<h1 className="text-white mb-5 display-5 d-flex">Корзина</h1>
 					<div className="row row-cols-4 g-3">
 						{notes.map(note =>
 							<Note

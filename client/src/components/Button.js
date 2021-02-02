@@ -10,7 +10,8 @@ export const Button = ({children, type = 'button', disabled = false, size = 'def
 		warning: 'btn-warning',
 		outlineDark: 'btn-outline-dark',
 		outlineSecondary: 'btn-outline-secondary',
-		outlineLight: 'btn-outline-light'
+		outlineLight: 'btn-outline-light',
+		light: 'btn-light'
 	}
 
 	const attrs = {
