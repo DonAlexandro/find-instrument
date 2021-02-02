@@ -23,7 +23,7 @@ export default function App() {
 			login, logout, token, ready
 		}}>
 			<Router>
-				<ToastContainer />
+				<ToastContainer position="bottom-left"/>
 				<Navbar isAuthenticated={isAuthenticated}/>
 				<div className="container mt-4 pb-4">
 					{routes}

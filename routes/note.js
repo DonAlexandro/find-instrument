@@ -98,4 +98,33 @@ router.post('/remove', auth, async (req, res) => {
 	}
 })
 
+router.get('/tag/:id', auth, async (req, res) => {
+	try {
+		if (req.params.id) {
+			const notes = await Note
+				.find({
+					author: req.user.userId,
+					removed: false
+				})
+				.sort({date: 'desc'})
+				.populate('tags.tagId')
+				.lean()
+
+			const notesByTag = notes.filter(note => {
+				const isNoteHasTag = note.tags.some(tag => tag.tagId._id.toString() === req.params.id.toString())
+
+				if (isNoteHasTag) {
+					return note
+				}
+			})
+
+			res.json({notes: notesByTag})
+		}
+
+	} catch (e) {
+		console.error(e)
+		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
+	}
+})
+
 module.exports = router
