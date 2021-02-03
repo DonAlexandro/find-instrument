@@ -12,12 +12,14 @@ router.post('/', auth, noteValidator, async (req, res) => {
 		return
 	}
 
+
 	try {
-		const {title, text, archived, note} = req.body
+		const {title, text, archived, note, list} = req.body
 
 		const newNote = new Note({
-			title, text,
-			archived,
+			title, archived,
+			text: text && text,
+			list: list && list,
 			author: req.user.userId,
 			tags: note?.tags ? note.tags : [],
 			color: note?.color && note.color

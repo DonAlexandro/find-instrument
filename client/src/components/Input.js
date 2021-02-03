@@ -47,9 +47,17 @@ export const Textarea = ({styles, actions, error, innerRef, label, name}) => {
 	)
 }
 
-export const InputGroup = ({size = '', children}) => {
+export const InputGroup = ({size = '', children, spaces = []}) => {
+	const attrs = {
+		className: [
+			'input-group',
+			size.length && `input-group-${size}`,
+			...spaces
+		].join(' ')
+	}
+
 	return (
-		<div className={`input-group ${size.length && `input-group-${size}`}`}>
+		<div {...attrs}>
 			{children}
 		</div>
 	)
@@ -65,8 +73,8 @@ export const DefaultInput = ({type, innerRef, label, name, id, disabled, value, 
 			placeholder={label}
 			ref={innerRef}
 			disabled={disabled}
-			value={value}
 			onChange={actions?.onChange}
+			defaultValue={value}
 		/>
 	)
 }

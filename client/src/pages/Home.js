@@ -6,11 +6,13 @@ import {Note} from '../components/Note'
 import {Loader} from '../components/Loader'
 import {NoteForm} from '../components/NoteForm'
 import {addObjectToPosition, removeObjectFromArr, updateObject} from '../utils/functions'
+import {NoteModal} from '../components/modals/NoteModal'
 
 export const Home = () => {
 	const [, setState] = useState()
 	const [notes, setNotes] = useState([])
 	const [tags, setTags] = useState([])
+	const [fullNote, setFullNote] = useState({})
 
 	const {loading, request, error, clearError} = useHttp()
 	const {token} = useContext(AuthContext)
@@ -68,6 +70,7 @@ export const Home = () => {
 
 	return (
 		<div className="w-80 mx-auto">
+			<NoteModal note={fullNote}/>
 			<NoteForm addNote={addNote} tags={tags}/>
 			{notes.length ?
 			<>
@@ -82,6 +85,7 @@ export const Home = () => {
 								key={note._id}
 								deleteNote={deleteNote}
 								updateNote={updateNote}
+								setFullNote={setFullNote}
 							/>
 						)}
 					</div>
@@ -98,6 +102,7 @@ export const Home = () => {
 								key={note._id}
 								deleteNote={deleteNote}
 								updateNote={updateNote}
+								setFullNote={setFullNote}
 							/>
 						)}
 					</div>

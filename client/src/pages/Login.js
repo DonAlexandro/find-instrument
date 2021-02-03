@@ -61,7 +61,7 @@ export const Login = () => {
 				</div>
 			</form>
 			<p className="text-center mb-0 mt-4 fs-7 text-muted">
-				Ще не з нами? <Link to="/signup">Худчіш реєструйтеся!</Link>
+				Ще не з нами? <Link to="/signup" className="text-warning">Худчіш реєструйтеся!</Link>
 			</p>
 		</AuthCard>
 	)

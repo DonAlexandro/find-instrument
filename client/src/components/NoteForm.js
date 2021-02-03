@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react'
-import {Input, Textarea} from './Input'
+import {DefaultInput, Input, InputGroup, Textarea} from './Input'
 import {Button} from './Button'
 import ReactTooltip from 'react-tooltip'
 import {useForm} from 'react-hook-form'
@@ -12,9 +12,12 @@ import {isObjectInArray} from '../utils/functions'
 
 export const NoteForm = ({addNote, tags}) => {
 	const notePortrait = {tags: [], color: 'bg-dark'}
+	const listItemPortrait = {title: '', done: false}
 
 	const [formExpanded, setFormExpanded] = useState(false)
 	const [note, setNote] = useState(notePortrait)
+	const [list, setList] = useState([])
+	const [textType, setTextType] = useState(true)
 
 	const {token} = useContext(AuthContext)
 	const {register, getValues, reset} = useForm()
@@ -28,17 +31,23 @@ export const NoteForm = ({addNote, tags}) => {
 	const submitHandler = async (archived = false) => {
 		const data = getValues(['title', 'text'])
 
-		if (!data.title.length && !data.text.length) {
+		const filteredList = list.filter(item => item.title !== '')
+
+		if (!data.title.length && !data.text.length && filteredList.length === 0) {
 			setNote(notePortrait)
 			return setFormExpanded(false)
 		}
 
 		try {
-			const response = await request('/api/notes', 'POST', {...data, archived, note}, {
+			const body = {
+				archived, note,
+				title: data.title,
+				[textType ? 'text' : 'list']: textType ? data.text : filteredList
+			}
+
+			const response = await request('/api/notes', 'POST', body, {
 				Authorization: `Bearer ${token}`
 			})
-
-			console.log(response.note)
 
 			if (response.message) {
 				toast.dark(response.message)
@@ -49,6 +58,7 @@ export const NoteForm = ({addNote, tags}) => {
 			}
 
 			setNote(notePortrait)
+			setList([])
 			reset({text: '', title: ''})
 			setFormExpanded(false)
 		} catch (e) {}
@@ -68,8 +78,28 @@ export const NoteForm = ({addNote, tags}) => {
 
 	const updateColor = (_, color) => setNote(prev => ({...prev, color}))
 
+	const changeNoteType = () => {
+		setTextType(prev => !prev)
+
+		if (list.length >= 1) {
+			return setList(prev => ([...prev]))
+		}
+
+		setList([listItemPortrait])
+	}
+
+	const deleteListItem = (idx) => {
+		const newList = list.filter((_, index) => index !== idx)
+
+		if (newList.length === 0) {
+			return setTextType(true)
+		}
+
+		setList(newList)
+	}
+
 	return (
-		<div className={`note card w-75 ${note.color} border border-secondary shadow-sm mx-auto mb-5 ${formExpanded ? 'p-2' : ''}`}>
+		<div className={`note card w-75 ${note.color} shadow-sm mx-auto mb-5 ${formExpanded ? 'p-2 border border-secondary' : 'border-0'}`}>
 			<form>
 				<Input
 					type="text"
@@ -79,12 +109,41 @@ export const NoteForm = ({addNote, tags}) => {
 					actions={{onClick: () => setFormExpanded(true)}}
 				/>
 				{formExpanded &&
-					<Textarea
-						name="text"
-						label="Нотатка..."
-						styles={['mt-3']}
-						innerRef={register}
-					/>
+					<>
+						<div className={`mt-3 ${!textType ? 'd-block' : 'd-none'}`}>
+							{list.map((item, idx) =>
+								<InputGroup size="sm" spaces={['mb-2']} key={idx}>
+									<DefaultInput
+										type="text"
+										name="itemTitle"
+										label="Пункт..."
+										innerRef={register}
+										value={item.title}
+										actions={{onChange: e => list[idx].title = e.target.value}}
+									/>
+									<Button
+										color="outlineSecondary"
+										actions={{onClick: () => deleteListItem(idx)}}
+									><i className="bi bi-x"></i></Button>
+								</InputGroup>
+							)}
+							<Button
+								color="outlineLight"
+								size="sm"
+								actions={{onClick: () => setList(prev => ([...prev, listItemPortrait]))}}
+							>
+								<i className="bi bi-plus"></i> Новий пункт
+							</Button>
+						</div>
+						<div className={!textType ? 'd-none' : 'd-block'}>
+							<Textarea
+								name="text"
+								label="Нотатка..."
+								innerRef={register}
+								styles={['mt-3']}
+							/>
+						</div>
+					</>
 				}
 			</form>
 			{formExpanded &&
@@ -108,7 +167,7 @@ export const NoteForm = ({addNote, tags}) => {
 								aria-expanded="false"
 								data-tip="Змінити колір"
 							>
-								<i className="bi bi-palette d-flex align-items-center"></i>
+								<i className="bi bi-palette d-flex"></i>
 							</button>
 							<ReactTooltip effect="solid"/>
 							<ColorPicker note={note} updateColor={updateColor}/>
@@ -118,7 +177,7 @@ export const NoteForm = ({addNote, tags}) => {
 							spaces={['ms-2']}
 							actions={{onClick: () => submitHandler(true)}}
 						>
-							<i className="bi bi-archive d-flex align-items-center"></i>
+							<i className="bi bi-archive d-flex"></i>
 						</Button>
 						<div className="dropdown ms-2">
 							<button
@@ -127,14 +186,21 @@ export const NoteForm = ({addNote, tags}) => {
 								aria-expanded="false"
 								data-tip="Змінити колір"
 							>
-								<i className="bi bi-tag d-flex align-items-center"></i>
+								<i className="bi bi-tag d-flex"></i>
 							</button>
 							<ReactTooltip effect="solid"/>
 							<TagPicker note={note} tags={tags} toggleTag={toggleTag}/>
 						</div>
 						<ReactTooltip effect="solid"/>
-						<Button tooltip="В вигляді списку" spaces={['ms-2']}>
-							<i className="bi bi-list-task d-flex align-items-center"></i>
+						<Button
+							tooltip={`${!textType ? 'Звичайний текст' : 'В вигляді списку'}`}
+							spaces={['ms-2']}
+							actions={{onClick: changeNoteType}}
+						>
+							{!textType ?
+								<i className="bi bi-card-text d-flex"></i> :
+								<i className="bi bi-list-task d-flex"></i>
+							}
 						</Button>
 						<ReactTooltip effect="solid"/>
 					</div>
