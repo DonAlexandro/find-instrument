@@ -1,6 +1,7 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "utils/_variables.scss";
 @import "utils/_mixins.scss";
+@import "utils/color.scss";
 
 a {
     text-decoration: none;
@@ -42,6 +43,7 @@ a {
 }
 
 .note {
+    max-height: 470px;
     transition: $transition;
 
     .card-title {
@@ -65,6 +67,8 @@ a {
     }
 
     &:hover {
+        box-shadow: $shadow-sm;
+
         .card-footer {
             > .btn, .dropdown {
                 opacity: 1;
@@ -131,7 +135,7 @@ a {
 }
 
 .shadow-sm {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .7) !important;
+    box-shadow: $shadow-sm;
 }
 
 .color-picker.show {
@@ -204,5 +208,20 @@ a {
     &:hover, &:focus {
         color: #fff;
         background-color: $brown;
+    }
+}
+
+.form-control {
+    background: transparent;
+    border: 1px solid $secondary-color;
+    color: #fff;
+
+    &:focus {
+        background: transparent;
+        color: #fff;
+    }
+
+    + label {
+        color: $secondary-color;
     }
 }

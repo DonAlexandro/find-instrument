@@ -8,7 +8,7 @@ import {ColorPicker} from './ColorPicker'
 import {TagPicker} from './TagPicker'
 import {isObjectInArray} from '../utils/functions'
 
-export const Note = ({note, deleteNote, updateNote, tags}) => {
+export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 	const {request, error, clearError} = useHttp()
 	const {token} = useContext(AuthContext)
 
@@ -79,7 +79,12 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 
 	return (
 		<div className="col">
-			<div className={`note card h-100 ${note.color} text-white`}>
+			<div
+				className={`note card h-100 text-white overflow-hidden ${note.color}`}
+				// data-bs-toggle="modal"
+				// data-bs-target="#noteModal"
+				// onClick={() => setFullNote(note)}
+			>
 				<div className="card-header border-bottom-0 d-flex align-items-start justify-content-between">
 					{note.title && <h6 className="card-title mb-0 align-self-center">{note.title}</h6>}
 					{!note.removed && !note.archived &&
@@ -101,6 +106,20 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 					<div className="d-flex flex-column align-items-start h-100">
 						<div className="flex-grow-1">
 							{note.text && <p className={`card-text ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
+							{note.list &&
+								note.list.map((item) =>
+									<div className="form-check" key={item._id}>
+										<input
+											className="form-check-input"
+											type="checkbox"
+											id={`listItem-${item._id}`}
+										/>
+										<label className="form-check-label" htmlFor={`listItem-${item._id}`}>
+											{item.title}
+										</label>
+									</div>
+								)
+							}
 						</div>
 						{note.tags.length !== 0 &&
 							<div className="mt-2">
@@ -124,7 +143,7 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 								aria-expanded="false"
 								data-tip="Змінити колір"
 							>
-								<i className="bi bi-palette-fill d-flex"></i>
+								<i className="bi bi-palette-fill"></i>
 							</button>
 							<ReactTooltip effect="solid"/>
 							<ColorPicker note={note} updateColor={updateColor}/>
@@ -135,7 +154,7 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 							tooltip={`${note.archived ? 'Вернути з архіву' : 'Архівувати'}`}
 							actions={{onClick: () => moveNote(note._id, false, !note.archived)}}
 						>
-							<i className="bi bi-archive-fill d-flex align-items-center"></i>
+							<i className="bi bi-archive-fill"></i>
 						</Button>
 						<ReactTooltip effect="solid"/>
 						<div className="dropdown">
@@ -145,7 +164,7 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 								aria-expanded="false"
 								data-tip="Додати ярлик"
 							>
-								<i className="bi bi-tag-fill d-flex align-items-center"></i>
+								<i className="bi bi-tag-fill"></i>
 							</button>
 							<ReactTooltip effect="solid"/>
 							<TagPicker tags={tags} toggleTag={toggleTag} note={note}/>
@@ -159,7 +178,7 @@ export const Note = ({note, deleteNote, updateNote, tags}) => {
 							spaces={['me-2']}
 							actions={{onClick: () => removeNote(note._id)}}
 						>
-							<i className="bi bi-trash-fill d-flex align-items-center"></i>
+							<i className="bi bi-trash-fill"></i>
 						</Button>
 						<ReactTooltip effect="solid"/>
 					</>

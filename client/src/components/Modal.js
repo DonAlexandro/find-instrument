@@ -1,15 +1,16 @@
 import React from 'react'
 
-export const Modal = ({children, size = 'default', id}) => {
+export const Modal = ({children, size = 'default', id, color = 'bg-dark'}) => {
 	const sizes = {
 		sm: 'modal-sm',
+		lg: 'modal-lg',
 		default: ''
 	}
 
 	return (
-		<div className="modal" id={id}>
+		<div className="modal fade" id={id}>
 			<div className={`modal-dialog ${sizes[size]} modal-dialog-centered`}>
-				<div className="modal-content bg-dark shadow-sm">
+				<div className={`modal-content shadow-sm ${color}`}>
 					{children}
 				</div>
 			</div>
@@ -30,7 +31,7 @@ export const ModalHeader = ({children}) => {
 
 export const ModalBody = ({children}) => {
 	return (
-		<div className="modal-body">
+		<div className="modal-body text-white">
 			{children}
 		</div>
 	)

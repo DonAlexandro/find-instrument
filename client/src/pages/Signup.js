@@ -85,7 +85,7 @@ export const Signup = () => {
 				</div>
 			</form>
 			<p className="text-center mb-0 mt-4 fs-7 text-muted">
-				Вже зареєстровані? <Link to="/login">Тоді просто увійдіть!</Link>
+				Вже зареєстровані? <Link to="/login" className="text-warning">Тоді просто увійдіть!</Link>
 			</p>
 		</AuthCard>
 	)

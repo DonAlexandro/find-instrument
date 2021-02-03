@@ -63,7 +63,7 @@ exports.loginValidator = [
 exports.noteValidator = [
 	body('title')
 		.custom((value, {req}) => {
-			if (!req.body.text.length && !value.length) {
+			if (!req.body.text && !value.length && !req.body.list) {
 				return false
 			}
 
@@ -71,7 +71,7 @@ exports.noteValidator = [
 		}),
 	body('text')
 		.custom((value, {req}) => {
-			if (!req.body.title.length && !value.length) {
+			if (!req.body.title && !value.length && !req.body.list) {
 				return false
 			}
 
