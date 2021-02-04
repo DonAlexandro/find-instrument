@@ -70,7 +70,7 @@ export const Home = () => {
 
 	return (
 		<div className="w-80 mx-auto">
-			<NoteModal note={fullNote}/>
+			<NoteModal note={fullNote} updateNote={updateNote}/>
 			<NoteForm addNote={addNote} tags={tags}/>
 			{notes.length ?
 			<>

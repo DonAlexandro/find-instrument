@@ -56,7 +56,8 @@ router.get('/', auth, async (req, res) => {
 
 router.post('/update', auth, async (req, res) => {
 	try {
-		const {color, archived, removed, tags, pinned} = req.body
+
+		const {color, archived, removed, tags, pinned, title, text} = req.body
 
 		const note = await Note.findOne({
 			_id: req.body.id,
@@ -64,6 +65,8 @@ router.post('/update', auth, async (req, res) => {
 		})
 
 		const toChange = {
+			title: title ? title : note.title,
+			text: text ? text : note.text,
 			color: color ? color : note.color,
 			archived: archived !== undefined ? archived : note.archived,
 			removed: removed !== undefined ? removed : note.removed,
@@ -83,19 +86,32 @@ router.post('/update', auth, async (req, res) => {
 			res.json({message: ''})
 		}
 	} catch (e) {
+		console.log(e)
 		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
 	}
 })
 
 router.post('/remove', auth, async (req, res) => {
 	try {
-		await Note.deleteOne({
-			_id: req.body.id,
-			author: req.user.userId
-		})
+		const {id} = req.body
 
-		res.json({message: 'Замітку втрачено назавжди...'})
+		if (id) {
+			await Note.deleteOne({
+				_id: id,
+				author: req.user.userId
+			})
+
+			return res.json({message: 'Замітку втрачено назавжди...'})
+		} else {
+			await Note.deleteMany({
+				removed: true,
+				author: req.user.userId
+			})
+
+			return res.json({message: 'Корзина очищена'})
+		}
 	} catch (e) {
+		console.log(e)
 		res.status(500).json({message: 'Щось пішло не так, спробуйте заново пізніше'})
 	}
 })

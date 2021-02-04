@@ -79,20 +79,15 @@ export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 
 	return (
 		<div className="col">
-			<div
-				className={`note card h-100 text-white overflow-hidden ${note.color}`}
-				// data-bs-toggle="modal"
-				// data-bs-target="#noteModal"
-				// onClick={() => setFullNote(note)}
-			>
+			<div className={`note card h-100 text-white ${note.color}`}>
 				<div className="card-header border-bottom-0 d-flex align-items-start justify-content-between">
-					{note.title && <h6 className="card-title mb-0 align-self-center">{note.title}</h6>}
+					<h6 className="card-title mb-0 align-self-center flex-grow-1">{note.title || ''}</h6>
 					{!note.removed && !note.archived &&
 						<>
 							<Button
 								color={`${note.pinned ? 'light' : 'outlineLight'}`}
 								size="sm"
-								spaces={['ms-2']}
+								spaces={note.title && ['ms-2']}
 								tooltip={`${note.pinned ? 'Відкріпити нотатку' : 'Закріпити нотатку'}`}
 								actions={{onClick: () => pinNote(note._id, !note.pinned)}}
 							>
@@ -102,10 +97,15 @@ export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 						</>
 					}
 				</div>
-				<div className="card-body pt-2">
+				<div
+					className="card-body pt-2"
+					data-bs-toggle={note.removed ? '' : 'modal'}
+					data-bs-target={note.removed ? '' : '#noteModal'}
+					onClick={note.removed ? () => {} : () => setFullNote(note)}
+				>
 					<div className="d-flex flex-column align-items-start h-100">
-						<div className="flex-grow-1">
-							{note.text && <p className={`card-text ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
+						<div className="flex-grow-1 w-100">
+							{note.text && <p className={`card-text text-wrap ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
 							{note.list &&
 								note.list.map((item) =>
 									<div className="form-check" key={item._id}>
@@ -119,6 +119,12 @@ export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 										</label>
 									</div>
 								)
+							}
+							{note.tags.length === 0 &&
+							 note.list.length === 0 &&
+							 note.text.length === 0 &&
+							 note.title.length === 0 &&
+								<p className="lead text-muted">Пуста нотатка</p>
 							}
 						</div>
 						{note.tags.length !== 0 &&

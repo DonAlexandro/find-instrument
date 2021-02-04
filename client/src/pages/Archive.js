@@ -5,11 +5,13 @@ import {useHttp} from '../hooks/http'
 import {Loader} from '../components/Loader'
 import {Note} from '../components/Note'
 import {addObjectToPosition, removeObjectFromArr, updateObject} from '../utils/functions'
+import {NoteModal} from '../components/modals/NoteModal';
 
 export const Archive = () => {
 	const [, setState] = useState()
 	const [notes, setNotes] = useState([])
 	const [tags, setTags] = useState([])
+	const [fullNote, setFullNote] = useState({})
 
 	const {loading, request, error, clearError} = useHttp()
 	const {token} = useContext(AuthContext)
@@ -63,6 +65,7 @@ export const Archive = () => {
 
 	return (
 		<div className="w-80 mx-auto">
+			<NoteModal note={fullNote} updateNote={updateNote}/>
 			{notes.length ?
 				<>
 					<h1 className="text-white mb-5 display-5 d-flex">Архів</h1>
@@ -74,6 +77,7 @@ export const Archive = () => {
 								key={note._id}
 								deleteNote={deleteNote}
 								updateNote={updateNote}
+								setFullNote={setFullNote}
 							/>
 						)}
 					</div>
