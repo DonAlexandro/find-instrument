@@ -5,6 +5,7 @@ import {Loader} from '../components/Loader'
 import {useHttp} from '../hooks/http'
 import {AuthContext} from '../context/authContext'
 import {removeObjectFromArr} from '../utils/functions';
+import {Button} from '../components/Button';
 
 export const Trash = () => {
 	const [notes, setNotes] = useState([])
@@ -13,6 +14,17 @@ export const Trash = () => {
 	const {token} = useContext(AuthContext)
 
 	const deleteNote = id => setNotes(removeObjectFromArr(notes, id))
+
+	const clearTrash = async () => {
+		try {
+			const response = await request('/api/notes/remove', 'POST', null, {
+				Authorization: `Bearer ${token}`
+			})
+
+			toast.dark(response.message)
+			setNotes([])
+		} catch (e) {}
+	}
 
 	const fetchNotes = useCallback(async () => {
 		try {
@@ -41,7 +53,13 @@ export const Trash = () => {
 		<div className="w-80 mx-auto">
 			{notes.length ?
 				<>
-					<h1 className="text-white mb-5 display-5 d-flex">Корзина</h1>
+					<div className="d-flex justify-content-between align-items-center mb-5">
+						<h1 className="text-white display-5 d-flex">Корзина</h1>
+						<Button
+							color="outlineLight"
+							actions={{onClick: clearTrash}}
+						>Очистити корзину</Button>
+					</div>
 					<div className="row row-cols-4 g-3">
 						{notes.map(note =>
 							<Note
