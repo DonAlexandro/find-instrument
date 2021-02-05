@@ -30,8 +30,11 @@ export const Navbar = ({isAuthenticated}) => {
 	}, [request, token])
 
 	useEffect(() => {
-		fetchTags()
-	}, [fetchTags])
+		if (token) {
+			fetchTags()
+		}
+	}, [fetchTags, token])
+
 
 	useEffect(() => {
 		toast.error(error)

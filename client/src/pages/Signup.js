@@ -20,7 +20,7 @@ export const Signup = () => {
 	const submitHandler = async data => {
 		try {
 			const response = await request('/api/auth/signup', 'POST', {...data})
-			toast.success(response.message)
+			toast.dark(response.message)
 			history.push('/login')
 		} catch (e) {}
 	}
