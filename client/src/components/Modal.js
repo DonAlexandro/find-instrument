@@ -11,7 +11,7 @@ export const Modal = ({children, size = 'default', id, color = 'bg-dark'}) => {
 		<div className="modal fade" id={id}>
 			<div className={`modal-dialog ${sizes[size]} modal-dialog-centered`}>
 				<div className={`modal-content shadow-sm bg-dark`}>
-					<div className={`${color} note rounded border-0`}>
+					<div className={`${color} pale rounded border-0`}>
 						{children}
 					</div>
 				</div>

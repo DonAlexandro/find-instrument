@@ -99,7 +99,7 @@ export const NoteForm = ({addNote, tags}) => {
 	}
 
 	return (
-		<div className={`note card w-75 ${note.color} shadow-sm mx-auto mb-5 ${formExpanded ? 'p-2 border border-secondary' : 'border-0'}`}>
+		<div className={`note-form card w-75 pale ${note.color} shadow-sm mx-auto mb-5 ${formExpanded ? 'p-2 border border-secondary' : 'border-0'}`}>
 			<form>
 				<Input
 					type="text"

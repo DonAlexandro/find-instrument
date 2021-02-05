@@ -48,7 +48,7 @@ export const TagsModal = ({tags}) => {
 			}
 		}
 
-		setTags(replace(tags))
+		setTags(replace(localTags))
 		setState({})
 	}
 
@@ -58,7 +58,7 @@ export const TagsModal = ({tags}) => {
 				Authorization: `Bearer ${token}`
 			})
 
-			setTags(prev => prev.filter(tag => tag._id !== id))
+			setTags(tags.filter(tag => tag._id !== id))
 		} catch (e) {}
 	}
 
@@ -75,12 +75,12 @@ export const TagsModal = ({tags}) => {
 							innerRef={register}
 							disabled={loading}
 						/>
-						<Button color="outlineLight" type="submit">
+						<Button color="outlineSecondary" type="submit">
 							<i className="bi bi-check2"></i>
 						</Button>
 					</InputGroup>
 				</form>
-				{tags.length ?
+				{localTags.length ?
 					<ul className="list-group list-group-flush mt-2">
 						{localTags.map((tag, idx) =>
 							<TagItem

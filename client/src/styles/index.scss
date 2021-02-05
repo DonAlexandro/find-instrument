@@ -42,12 +42,16 @@ a {
     }
 }
 
+.note-form {
+}
+
 .note {
     max-height: 470px;
     transition: $transition;
 
     .card-title {
         font-size: 17px;
+        cursor: pointer;
     }
 
     .card-header {
@@ -83,44 +87,50 @@ a {
     }
 }
 
-.note.bg-dark {
+.note .card-body, .modal-body {
+    .form-check-input:checked + label {
+        text-decoration: line-through;
+    }
+}
+
+.pale.bg-dark {
     border: 1px solid $secondary-color;
     background-color: rgba($dark-color, .4) !important;
 }
 
-.note.bg-success {
+.pale.bg-success {
     background-color: rgba($success-color, .4) !important;
 }
 
-.note.bg-warning {
+.pale.bg-warning {
     background-color: rgba($warning-color, .4) !important;
 }
 
-.note.bg-primary {
+.pale.bg-primary {
     background-color: rgba($primary-color, .4) !important;
 }
 
-.note.bg-danger {
+.pale.bg-danger {
     background-color: rgba($danger-color, .4) !important;
 }
 
-.note.bg-info {
+.pale.bg-info {
     background-color: rgba($info-color, .4) !important;
 }
 
-.note.bg-secondary {
+.pale.bg-secondary {
     background-color: rgba($secondary-color, .4) !important;
 }
 
-.note.bg-purple {
+.pale.bg-purple {
     background-color: rgba($purple, .4) !important;
 }
 
-.note.bg-pink {
+.pale.bg-pink {
     background-color: rgba($pink, .4) !important;
 }
 
-.note.bg-brown {
+.pale.bg-brown {
     background-color: rgba($brown, .4) !important;
 }
 
@@ -159,7 +169,8 @@ a {
 }
 
 .tag-picker.show {
-    width: 15rem;
+    min-width: 15rem;
+    width: auto;
     display: flex;
     flex-direction: column;
 }

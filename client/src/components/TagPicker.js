@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {DefaultInput, InputGroup} from './Input'
+import {isObjectInArray} from '../utils/functions'
 
 export const TagPicker = ({tags, toggleTag, note}) => {
 	const [localTags, setLocalTags] = useState([])
@@ -16,9 +17,6 @@ export const TagPicker = ({tags, toggleTag, note}) => {
 		setLocalTags(tags.filter(tag => tag.title.toLowerCase().includes(value.toLowerCase())))
 	}
 
-	const isObjInArr = (title) => {
-		return note.tags.some(tag => tag.tagId.title === title)
-	}
 
 	return (
 		<ul className="dropdown-menu dropdown-menu-dark tag-picker">
@@ -36,13 +34,13 @@ export const TagPicker = ({tags, toggleTag, note}) => {
 			{localTags.map(tag =>
 				<li key={tag._id}>
 					<div className="dropdown-item">
-						<div className="form-check" onClick={() => toggleTag(note._id, tag)}>
+						<div className="form-check">
 							<input
 								className="form-check-input"
 								type="checkbox"
 								id={`tag-${tag._id}`}
-								checked={isObjInArr(tag.title)}
-								onChange={() => {}}
+								checked={isObjectInArray(note.tags, tag)}
+								onChange={() => toggleTag(note._id, tag)}
 							/>
 							<label className="form-check-label" htmlFor={`tag-${tag._id}`}>
 								{tag.title}

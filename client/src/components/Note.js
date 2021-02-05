@@ -64,7 +64,9 @@ export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 			await request('/api/notes/update', 'POST', {id, tags}, {
 				Authorization: `Bearer ${token}`
 			})
-		} catch (e) {}
+		} catch (e) {
+			console.error(e)
+		}
 	}
 
 	const pinNote = async (id, pinned = false) => {
@@ -77,11 +79,28 @@ export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 		} catch (e) {}
 	}
 
+	const checkListItem = async (id, idx, done) => {
+		note.list[idx].done = done
+
+		try {
+			await request('/api/notes/update', 'POST', {id, list: note.list}, {
+				Authorization: `Bearer ${token}`
+			})
+
+			updateNote({id, list: note.list})
+		} catch (e) {}
+	}
+
 	return (
 		<div className="col">
-			<div className={`note card h-100 text-white ${note.color}`}>
+			<div className={`note card h-100 text-white pale ${note.color}`}>
 				<div className="card-header border-bottom-0 d-flex align-items-start justify-content-between">
-					<h6 className="card-title mb-0 align-self-center flex-grow-1">{note.title || ''}</h6>
+					<h6
+						className="card-title mb-0 align-self-center flex-grow-1"
+						data-bs-toggle={note.removed ? '' : 'modal'}
+						data-bs-target={note.removed ? '' : '#noteModal'}
+						onClick={note.removed ? () => {} : () => setFullNote(note)}
+					>{note.title || ''}</h6>
 					{!note.removed && !note.archived &&
 						<>
 							<Button
@@ -97,22 +116,22 @@ export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 						</>
 					}
 				</div>
-				<div
-					className="card-body pt-2"
-					data-bs-toggle={note.removed ? '' : 'modal'}
-					data-bs-target={note.removed ? '' : '#noteModal'}
-					onClick={note.removed ? () => {} : () => setFullNote(note)}
-				>
+				<div className="card-body pt-2">
 					<div className="d-flex flex-column align-items-start h-100">
 						<div className="flex-grow-1 w-100">
 							{note.text && <p className={`card-text text-wrap ${note.text.split('').length <= 60 ? 'lead' : ''}`}>{note.text}</p>}
 							{note.list &&
-								note.list.map((item) =>
-									<div className="form-check" key={item._id}>
+								note.list.map((item, idx) =>
+									<div
+										className="form-check"
+										key={item._id}
+									>
 										<input
 											className="form-check-input"
 											type="checkbox"
 											id={`listItem-${item._id}`}
+											checked={item.done}
+											onChange={() => checkListItem(note._id, idx, !item.done)}
 										/>
 										<label className="form-check-label" htmlFor={`listItem-${item._id}`}>
 											{item.title}
@@ -129,11 +148,11 @@ export const Note = ({note, deleteNote, updateNote, tags, setFullNote}) => {
 						</div>
 						{note.tags.length !== 0 &&
 							<div className="mt-2">
-								{note.tags.map(tag =>
+								{note.tags.map((tag, idx) =>
 									<span
-										key={tag.tagId?._id}
+										key={tag?.tagId?._id || idx}
 										className="badge rounded-pill bg-transparent border me-2 mt-2"
-									>{tag.tagId?.title}</span>
+									>{tag?.tagId?.title}</span>
 								)}
 							</div>
 						}
