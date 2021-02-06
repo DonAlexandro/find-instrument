@@ -1,22 +1,51 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useContext, useEffect, useState} from 'react'
+import {toast} from 'react-toastify'
 import {DefaultInput, InputGroup} from './Input'
 import {isObjectInArray} from '../utils/functions'
+import {useHttp} from '../hooks/http'
+import {AuthContext} from '../context/authContext'
 
 export const TagPicker = ({tags, toggleTag, note}) => {
 	const [localTags, setLocalTags] = useState([])
+	const [search, setSearch] = useState('')
+
+	const {request, clearError, error} = useHttp()
+	const {token} = useContext(AuthContext)
+
+	useEffect(() => {
+		toast.error(error)
+		clearError()
+	}, [error, clearError])
 
 	useEffect(() => {
 		setLocalTags(tags)
 	}, [tags, setLocalTags])
 
-	const tagSearch = async event => {
-		const {value} = event.target
+	const tagSearch = useCallback(() => {
+		if (!search.length) return setLocalTags(tags)
 
-		if (!value.length) return setLocalTags(tags)
+		setLocalTags(tags.filter(tag => tag.title.toLowerCase().includes(search.toLowerCase())))
+	}, [search, tags])
 
-		setLocalTags(tags.filter(tag => tag.title.toLowerCase().includes(value.toLowerCase())))
+	useEffect(() => {
+		tagSearch()
+	}, [search, tagSearch])
+
+	const addTag = async () => {
+		if (!search.length) {
+			return
+		}
+
+		try {
+			const response = await request('/api/tags', 'POST', {title: search}, {
+				Authorization: `Bearer ${token}`
+			})
+
+			toggleTag(note._id, response.tag)
+			setLocalTags(([...tags, response.tag]))
+			setSearch('')
+		} catch (e) {}
 	}
-
 
 	return (
 		<ul className="dropdown-menu dropdown-menu-dark tag-picker">
@@ -27,7 +56,8 @@ export const TagPicker = ({tags, toggleTag, note}) => {
 						type="text"
 						label="Введіть назву ярлика"
 						name="title"
-						actions={{onChange: tagSearch}}
+						value={search}
+						actions={{onChange: e => setSearch(e.target.value)}}
 					/>
 				</InputGroup>
 			</li>
@@ -49,6 +79,14 @@ export const TagPicker = ({tags, toggleTag, note}) => {
 					</div>
 				</li>
 			)}
+			{!search.length || !tags.some(tag => tag.title.toLowerCase() === search.toLowerCase()) ?
+				<li><button
+					className="dropdown-item"
+					onClick={addTag}
+				>
+					<i className="bi bi-plus"></i> Створити тег <strong>"{search}"</strong>
+				</button></li>
+			: <></>}
 		</ul>
 	)
 }

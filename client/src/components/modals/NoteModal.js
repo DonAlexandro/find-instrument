@@ -25,15 +25,24 @@ export const NoteModal = ({note, updateNote}) => {
 		} catch (e) {}
 	}
 
-	const checkListItem = async (id, idx, done) => {
-		note.list[idx].done = done
+	const editListItem = (idx, item) => {
+		const {done, title} = item
+
+		const toChange = {
+			done: done ? done : note.list[idx].done,
+			title: title ? title : note.list[idx].title,
+		}
+
+		Object.assign(note.list[idx], toChange)
 
 		try {
-			await request('/api/notes/update', 'POST', {id, list: note.list}, {
-				Authorization: `Bearer ${token}`
-			})
+			setTimeout(async () => {
+				await request('/api/notes/update', 'POST', {id: note._id, list: note.list}, {
+					Authorization: `Bearer ${token}`
+				})
+			}, 300)
 			
-			updateNote({id, list: note.list})
+			updateNote({id: note._id, list: note.list})
 		} catch (e) {}
 	}
 
@@ -59,11 +68,15 @@ export const NoteModal = ({note, updateNote}) => {
 							<input
 								className="form-check-input"
 								type="checkbox"
-								id={`listItem-${item._id}`}
 								checked={item.done}
-								onChange={() => checkListItem(note._id, idx, !item.done)}
+								onChange={() => editListItem(idx, {done: !item.done})}
 							/>
-							<label className="form-check-label" htmlFor={`listItem-${item._id}`}>
+							<label
+								className="form-check-label"
+								suppressContentEditableWarning
+								contentEditable
+								onInput={e => editListItem(idx, {title: e.target.textContent})}
+							>
 								{item.title}
 							</label>
 						</div>

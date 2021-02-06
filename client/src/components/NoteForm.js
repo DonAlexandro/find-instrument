@@ -59,6 +59,7 @@ export const NoteForm = ({addNote, tags}) => {
 
 			setNote(notePortrait)
 			setList([])
+			setTextType(true)
 			reset({text: '', title: ''})
 			setFormExpanded(false)
 		} catch (e) {}

@@ -58,7 +58,7 @@ export const TagsModal = ({tags}) => {
 				Authorization: `Bearer ${token}`
 			})
 
-			setTags(tags.filter(tag => tag._id !== id))
+			setTags(localTags.filter(tag => tag._id !== id))
 		} catch (e) {}
 	}
 
