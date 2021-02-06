@@ -1,10 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const config = require('config')
+const helmet = require('helmet')
+const compression = require('compression')
 
 const app = express()
 
 app.use(express.json({extended: true}))
+
+app.use(helmet())
+app.use(compression())
 
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/notes', require('./routes/note'))

@@ -47,6 +47,8 @@ export const TagPicker = ({tags, toggleTag, note}) => {
 		} catch (e) {}
 	}
 
+	console.log(search.length)
+
 	return (
 		<ul className="dropdown-menu dropdown-menu-dark tag-picker">
 			<li><h6 className="dropdown-header">Додати ярлик</h6></li>
@@ -72,21 +74,21 @@ export const TagPicker = ({tags, toggleTag, note}) => {
 								checked={isObjectInArray(note.tags, tag)}
 								onChange={() => toggleTag(note._id, tag)}
 							/>
-							<label className="form-check-label" htmlFor={`tag-${tag._id}`}>
+							<label className="form-check-label">
 								{tag.title}
 							</label>
 						</div>
 					</div>
 				</li>
 			)}
-			{!search.length || !tags.some(tag => tag.title.toLowerCase() === search.toLowerCase()) ?
+			{!search.length || !tags.some(tag => tag.title.toLowerCase() === search.toLowerCase()) &&
 				<li><button
 					className="dropdown-item"
 					onClick={addTag}
 				>
 					<i className="bi bi-plus"></i> Створити тег <strong>"{search}"</strong>
 				</button></li>
-			: <></>}
+			}
 		</ul>
 	)
 }

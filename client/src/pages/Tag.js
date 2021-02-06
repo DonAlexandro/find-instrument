@@ -6,7 +6,7 @@ import {addObjectToPosition, removeObjectFromArr, updateObject} from '../utils/f
 import {toast} from 'react-toastify'
 import {Loader} from '../components/Loader'
 import {Note} from '../components/Note'
-import {NoteModal} from '../components/modals/NoteModal';
+import {NoteModal} from '../components/modals/NoteModal'
 
 export const Tag = () => {
 	const [, setState] = useState()
@@ -102,6 +102,7 @@ export const Tag = () => {
 									key={note._id}
 									deleteNote={deleteNote}
 									updateNote={updateNote}
+									setFullNote={setFullNote}
 								/>
 							)}
 						</div>
@@ -118,6 +119,7 @@ export const Tag = () => {
 									key={note._id}
 									deleteNote={deleteNote}
 									updateNote={updateNote}
+									setFullNote={setFullNote}
 								/>
 							)}
 						</div>
