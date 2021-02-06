@@ -47,8 +47,6 @@ export const TagPicker = ({tags, toggleTag, note}) => {
 		} catch (e) {}
 	}
 
-	console.log(search.length)
-
 	return (
 		<ul className="dropdown-menu dropdown-menu-dark tag-picker">
 			<li><h6 className="dropdown-header">Додати ярлик</h6></li>
